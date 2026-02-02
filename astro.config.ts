@@ -21,6 +21,9 @@ const hasExternalScripts = false;
 const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
   hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
 
+// NOTE: The 'site' and 'base' values must match the values in src/config.yaml
+// for proper asset path generation. Use environment variables (SITE and BASE_PATH)
+// to override these defaults for different deployment targets.
 export default defineConfig({
   site: import.meta.env.SITE || 'https://ali-h-abbas.github.io',
   base: import.meta.env.BASE_PATH || '/astrowind-base',

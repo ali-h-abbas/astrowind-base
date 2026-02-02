@@ -267,17 +267,37 @@ SITE=http://localhost:4321 BASE_PATH=/ npm run dev
 
 ### Method 3: Platform-Specific Scripts
 
-The `package.json` includes convenience scripts:
+The `package.json` includes convenience scripts for reference:
 
 ```bash
-# GitHub Pages (uses defaults from astro.config.ts)
-npm run build:github
-
-# Vercel (uses defaults from astro.config.ts)
-npm run build:vercel
-
-# Standard build (uses defaults or .env)
+# All build scripts are equivalent - they use environment variables or fallback to defaults
 npm run build
+npm run build:github
+npm run build:vercel
+```
+
+To deploy to a specific platform, either:
+
+1. Copy the appropriate `.env` file before building:
+
+```bash
+# For GitHub Pages
+cp .env.github .env
+npm run build
+
+# For Vercel
+cp .env.vercel .env
+npm run build
+```
+
+2. Or set environment variables inline:
+
+```bash
+# For GitHub Pages
+SITE=https://ali-h-abbas.github.io BASE_PATH=/astrowind-base npm run build
+
+# For Vercel
+SITE=https://your-domain.vercel.app BASE_PATH=/ npm run build
 ```
 
 ## Configuration Consistency
@@ -345,11 +365,13 @@ SITE=https://your-domain.com BASE_PATH=/your-path npm run build
 # 2. Preview the build
 npm run preview
 
-# 3. Open http://localhost:4321/your-path in your browser
+# 3. Open http://localhost:4321 in your browser
+#    Note: The preview server serves from root, so navigate to
+#    http://localhost:4321 and not http://localhost:4321/your-path
 
 # 4. Check that:
 #    - CSS and styles load correctly
-#    - Navigation links work
+#    - Navigation links work (they will include the base path)
 #    - Images and assets display
 #    - No 404 errors in browser console
 ```
