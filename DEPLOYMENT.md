@@ -22,16 +22,16 @@ The project uses environment variables to configure the site URL and base path f
 ### What is a Base Path?
 
 The base path is the URL prefix where your site is hosted. It's crucial for:
+
 - Loading CSS and JavaScript files correctly
 - Generating proper asset URLs
 - Creating working navigation links
 
 ### When Do You Need a Base Path?
 
-- **GitHub Pages (Project Sites)**: Requires `/repository-name` 
+- **GitHub Pages (Project Sites)**: Requires `/repository-name`
   - Example: `https://username.github.io/repository-name`
   - Base path: `/repository-name`
-  
 - **GitHub Pages (User/Org Sites)**: No base path needed
   - Example: `https://username.github.io`
   - Base path: `/`
@@ -47,6 +47,7 @@ The base path is the URL prefix where your site is hosted. It's crucial for:
 ### Why the Base Path Matters
 
 Without the correct base path:
+
 - ❌ CSS files return 404 errors
 - ❌ JavaScript files fail to load
 - ❌ Images and assets are broken
@@ -54,6 +55,7 @@ Without the correct base path:
 - ❌ Site appears unstyled with default fonts
 
 With the correct base path:
+
 - ✅ All assets load correctly
 - ✅ Styling and functionality work as expected
 - ✅ Navigation works properly
@@ -64,6 +66,7 @@ With the correct base path:
 ### Current Setup
 
 This repository is already configured for GitHub Pages deployment to:
+
 - Site: `https://ali-h-abbas.github.io`
 - Repository: `astrowind-base`
 - Full URL: `https://ali-h-abbas.github.io/astrowind-base`
@@ -132,6 +135,7 @@ npm run build
 ### Build Command
 
 Vercel will automatically run:
+
 ```bash
 npm run build
 ```
@@ -150,11 +154,13 @@ The environment variables set in Vercel dashboard will be used automatically.
 ### Build Configuration
 
 Build command:
+
 ```bash
 npm run build
 ```
 
 Publish directory:
+
 ```
 dist
 ```
@@ -208,7 +214,6 @@ npm run preview
 
 - **SITE**: The full URL where your site will be hosted
   - Example: `https://ali-h-abbas.github.io`
-  
 - **BASE_PATH**: The base path for your deployment
   - Example: `/astrowind-base` (for GitHub Pages project sites)
   - Example: `/` (for Vercel/Netlify root deployments)
@@ -223,6 +228,7 @@ npm run preview
 ### Priority
 
 Environment variables are loaded in this order:
+
 1. System environment variables (highest priority)
 2. `.env` file
 3. Default values in `astro.config.ts` (fallback)
@@ -307,6 +313,7 @@ The `src/config.yaml` provides fallback values used by the site's internal confi
 **Symptoms**: Site appears unstyled, default fonts, no formatting
 
 **Solution**: Check that base path matches in both config files
+
 ```bash
 # Verify astro.config.ts base path
 grep -A 2 "defineConfig" astro.config.ts
