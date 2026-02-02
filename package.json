@@ -11,6 +11,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "build:github": "astro build",
+    "build:vercel": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
