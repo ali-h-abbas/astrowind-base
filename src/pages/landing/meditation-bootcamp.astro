@@ -266,7 +266,9 @@ const SUTRA_CHECKOUT_URL = import.meta.env.SUTRA_CHECKOUT_URL || 'https://sutra.
     loadingText.classList.remove('hidden');
 
     try {
-      const response = await fetch('/astrowind-base/api/subscribe', {
+      // Use dynamic base path for API endpoint
+      const basePath = import.meta.env.BASE_PATH || '';
+      const response = await fetch(`${basePath}/api/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

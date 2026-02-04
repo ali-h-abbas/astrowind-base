@@ -1,7 +1,15 @@
 /**
  * Simple file-based database for storing subscriber information
  * This is a basic implementation for tracking email signups
- * For production, consider using a proper database like Supabase or Firebase
+ * 
+ * ⚠️ IMPORTANT: This file-based database is for DEVELOPMENT/TESTING ONLY
+ * - In serverless environments (Vercel, Netlify), the file system is read-only or ephemeral
+ * - Data will be lost between deployments
+ * - For PRODUCTION use, migrate to a proper database:
+ *   - Supabase (recommended for serverless)
+ *   - Firebase Firestore
+ *   - MongoDB Atlas
+ *   - PostgreSQL with connection pooling
  */
 
 import fs from 'fs';
@@ -12,6 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Path to the subscribers database file
+// NOTE: This path works in local development but will NOT persist in serverless deployments
 const DB_PATH = path.resolve(__dirname, '../../data/subscribers.json');
 
 export interface Subscriber {
