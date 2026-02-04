@@ -1,0 +1,170 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Content from '~/components/widgets/Content.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import { getPermalink } from '~/utils/permalinks';
+
+const metadata = {
+  title: 'Meditation Offerings - Sarah Chen',
+  description: 'Explore our meditation programs, courses, and one-on-one sessions designed to support your mindfulness journey.',
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Section ******************* -->
+  <Hero
+    tagline="Meditation Offerings"
+    title="Find Your Path to Inner Peace"
+  >
+    <Fragment slot="subtitle">
+      Whether you're just beginning your meditation journey or looking to deepen your practice,
+      we have programs designed to meet you where you are.
+    </Fragment>
+  </Hero>
+
+  <!-- Featured Offering: Meditation Bootcamp ******************* -->
+  <Content
+    isReversed
+    tagline="Featured Program"
+    title="21-Day Meditation Bootcamp"
+    items={[
+      {
+        title: 'What You Get',
+        description: 'Daily guided meditations, lifetime access to all recordings, supportive community, and practical techniques you can use immediately.',
+      },
+      {
+        title: 'Perfect For',
+        description: 'Complete beginners, those who struggle to maintain a practice, or anyone looking for structured guidance in meditation.',
+      },
+      {
+        title: 'Time Commitment',
+        description: 'Just 10-15 minutes per day for 21 days. Flexible format works with any schedule.',
+      },
+    ]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      alt: 'Person meditating peacefully',
+      loading: 'eager',
+    }}
+    callToAction={{
+      text: 'Learn More & Enroll',
+      href: getPermalink('/landing/meditation-bootcamp'),
+      icon: 'tabler:arrow-right',
+      variant: 'primary',
+    }}
+  >
+    <Fragment slot="content">
+      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        Transform Your Mind in 21 Days
+      </h2>
+      <p class="text-lg mb-4">
+        Our most popular program designed to help you build a lasting meditation practice.
+        Join hundreds of students who have discovered inner peace and mental clarity.
+      </p>
+      <p class="text-muted dark:text-slate-400">
+        <strong>Next cohort starts soon!</strong> Limited spots available.
+      </p>
+    </Fragment>
+  </Content>
+
+  <!-- Additional Offerings ******************* -->
+  <Features3
+    title="More Ways to Practice"
+    subtitle="Additional programs and services to support your mindfulness journey"
+    columns={3}
+    items={[
+      {
+        title: 'Advanced Meditation Retreat',
+        description: 'A deep-dive intensive for experienced practitioners. Weekend immersion includes silent meditation, mindful movement, and advanced techniques.',
+        icon: 'tabler:mountain',
+      },
+      {
+        title: 'One-on-One Sessions',
+        description: 'Personalized meditation guidance tailored to your specific needs and goals. Work directly with Sarah for customized support.',
+        icon: 'tabler:user-circle',
+      },
+      {
+        title: 'Workplace Mindfulness',
+        description: 'Corporate meditation and mindfulness programs for teams and organizations. Reduce workplace stress and improve focus.',
+        icon: 'tabler:briefcase',
+      },
+    ]}
+  />
+
+  <!-- Coming Soon Section ******************* -->
+  <section class="px-4 py-16 mx-auto max-w-6xl md:px-6 md:py-20">
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900 p-8 md:p-12 rounded-2xl text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 dark:text-white">
+        More Offerings Coming Soon
+      </h2>
+      <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+        We're developing additional programs including specialized courses for anxiety management,
+        sleep improvement, and mindfulness for parents. Stay tuned!
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href={getPermalink('/landing/meditation-bootcamp')}
+          class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200"
+        >
+          Start with the Bootcamp →
+        </a>
+        <a
+          href={getPermalink('/contact')}
+          class="inline-block bg-white hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-800 dark:text-white font-semibold py-3 px-8 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors duration-200"
+        >
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ for Offerings ******************* -->
+  <section class="px-4 py-16 mx-auto max-w-3xl md:px-6 md:py-20">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 dark:text-white">
+      Choosing the Right Program
+    </h2>
+    <div class="space-y-6">
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-2 dark:text-white">
+          I'm completely new to meditation. Where should I start?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          The 21-Day Meditation Bootcamp is perfect for beginners. It provides structured guidance,
+          starting with the basics and gradually building your skills over three weeks.
+        </p>
+      </div>
+      
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-2 dark:text-white">
+          I have a meditation practice but want to go deeper. What do you recommend?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Consider the Advanced Meditation Retreat or one-on-one sessions. These offerings are designed
+          for practitioners who want personalized attention or intensive practice.
+        </p>
+      </div>
+      
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-2 dark:text-white">
+          Can I enroll in multiple programs?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Absolutely! Many students start with the bootcamp and then continue with one-on-one sessions.
+          We recommend starting with one program at a time to maintain focus.
+        </p>
+      </div>
+      
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-2 dark:text-white">
+          Do you offer group discounts for workplace programs?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Yes! Workplace mindfulness programs are customized for each organization with flexible pricing.
+          Contact us to discuss your team's needs.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
