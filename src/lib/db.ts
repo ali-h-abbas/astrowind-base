@@ -30,12 +30,12 @@ export interface Subscriber {
  */
 function initDatabase(): void {
   const dir = path.dirname(DB_PATH);
-  
+
   // Create data directory if it doesn't exist
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-  
+
   // Create database file if it doesn't exist
   if (!fs.existsSync(DB_PATH)) {
     fs.writeFileSync(DB_PATH, JSON.stringify([], null, 2));
@@ -93,14 +93,17 @@ export function getSubscribersBySource(source: string): Subscriber[] {
 export function getStats() {
   const subscribers = getSubscribers();
   const total = subscribers.length;
-  const bySource = subscribers.reduce((acc, sub) => {
-    acc[sub.source] = (acc[sub.source] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-  
+  const bySource = subscribers.reduce(
+    (acc, sub) => {
+      acc[sub.source] = (acc[sub.source] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
   const convertKitSuccess = subscribers.filter((sub) => sub.convertKitStatus === 'success').length;
   const convertKitError = subscribers.filter((sub) => sub.convertKitStatus === 'error').length;
-  
+
   return {
     total,
     bySource,

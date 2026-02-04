@@ -1,14 +1,14 @@
 /**
  * API Route: Email Subscription with ConvertKit Integration
- * 
+ *
  * This endpoint handles email capture from landing pages and:
  * 1. Validates the input data
  * 2. Subscribes the user to ConvertKit
  * 3. Stores the submission in a local database for analytics
- * 
+ *
  * POST /api/subscribe
  * Body: { email: string, name: string, source: string }
- * 
+ *
  * Environment Variables Required:
  * - CONVERTKIT_API_KEY: Your ConvertKit API key
  * - CONVERTKIT_FORM_ID: The form ID to subscribe users to
@@ -111,7 +111,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Parse request body
-    let body;
+    let body: { email?: string; name?: string; source?: string };
     try {
       body = await request.json();
     } catch {
@@ -216,4 +216,5 @@ export const POST: APIRoute = async ({ request }) => {
 };
 
 // Prerender this route as false to make it a server endpoint
-export const prerender = false;
+// NOTE: Commented out for GitHub Pages deployment. Uncomment when deploying to Vercel/Netlify/Node
+// export const prerender = false;

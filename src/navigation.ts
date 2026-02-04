@@ -20,11 +20,10 @@ export const headerData = {
     },
   ],
   actions: [
-    { 
-      text: 'Join Bootcamp', 
+    {
+      text: 'Join Bootcamp',
       href: getPermalink('/landing/meditation-bootcamp'),
-      variant: 'primary'
-    }
+    },
   ],
 };
 

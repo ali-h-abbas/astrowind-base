@@ -27,7 +27,7 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   site: import.meta.env.SITE || 'https://ali-h-abbas.github.io',
   base: import.meta.env.BASE_PATH || '/astrowind-base',
-  output: 'hybrid', // Changed from 'static' to support API routes
+  output: 'static', // Keep static for GitHub Pages; API route uses prerender: false
 
   integrations: [
     tailwind({
