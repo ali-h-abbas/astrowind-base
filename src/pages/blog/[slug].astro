@@ -1,31 +1,56 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import type { ImageMetadata } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { sanityClient, urlFor } from '~/lib/sanity';
 import { getPermalink, getCanonical } from '~/utils/permalinks';
 import { toHTML } from '@portabletext/to-html';
 import type { MetaData } from '~/types';
+import type { SanityPost, SanityImage } from '~/lib/sanity-types';
+
+interface PostSlug {
+  slug: string;
+}
+
+interface PortableTextImageValue extends SanityImage {
+  alt?: string;
+  caption?: string;
+}
+
+interface PortableTextCodeValue {
+  code: string;
+  language?: string;
+}
+
+interface PortableTextLinkValue {
+  href?: string;
+  blank?: boolean;
+}
 
 export const prerender = true;
 
 export const getStaticPaths = (async () => {
-  const posts = await sanityClient.fetch(
+  // Return empty array if Sanity client is not configured
+  if (!sanityClient) {
+    return [];
+  }
+
+  const posts: PostSlug[] = await sanityClient.fetch(
     `*[_type == "post" && draft != true] {
       "slug": slug.current
     }`
   );
 
-  return posts.map((post: any) => ({
+  return posts.map((post) => ({
     params: { slug: post.slug },
   }));
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
 
-// Fetch the full post content
-const post = await sanityClient.fetch(
-  `*[_type == "post" && slug.current == $slug && draft != true][0] {
+// Fetch the full post content (only if client is configured)
+const post: SanityPost | null = sanityClient
+  ? await sanityClient.fetch(
+      `*[_type == "post" && slug.current == $slug && draft != true][0] {
     _id,
     title,
     "slug": slug.current,
@@ -38,8 +63,9 @@ const post = await sanityClient.fetch(
     body,
     seo
   }`,
-  { slug }
-);
+      { slug }
+    )
+  : null;
 
 if (!post) {
   return Astro.redirect('/404');
@@ -47,22 +73,22 @@ if (!post) {
 
 // Convert Portable Text to HTML
 const bodyHtml = post.body
-  ? toHTML(post.body, {
+  ? toHTML(post.body as Parameters<typeof toHTML>[0], {
       components: {
         types: {
-          image: ({ value }: any) => {
+          image: ({ value }: { value: PortableTextImageValue }) => {
             const imageUrl = urlFor(value).width(800).url();
             return `<figure class="my-8">
               <img src="${imageUrl}" alt="${value.alt || ''}" class="w-full rounded-lg" loading="lazy" />
               ${value.caption ? `<figcaption class="text-center text-sm text-muted mt-2">${value.caption}</figcaption>` : ''}
             </figure>`;
           },
-          code: ({ value }: any) => {
+          code: ({ value }: { value: PortableTextCodeValue }) => {
             return `<pre class="my-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-x-auto"><code class="language-${value.language || 'text'}">${value.code}</code></pre>`;
           },
         },
         marks: {
-          link: ({ children, value }: any) => {
+          link: ({ children, value }: { children?: string; value?: PortableTextLinkValue }) => {
             const target = value?.blank ? '_blank' : '_self';
             const rel = value?.blank ? 'noopener noreferrer' : '';
             return `<a href="${value?.href}" target="${target}" rel="${rel}" class="text-primary hover:underline">${children}</a>`;
@@ -78,7 +104,7 @@ const imageUrl = post.mainImage ? urlFor(post.mainImage).width(1200).height(630)
 const metadata: MetaData = {
   title: post.seo?.metaTitle || post.title,
   description: post.seo?.metaDescription || post.excerpt,
-  canonical: url,
+  canonical: url.toString(),
   openGraph: {
     type: 'article',
     ...(imageUrl
@@ -103,24 +129,20 @@ const metadata: MetaData = {
         {
           post.categories && post.categories.length > 0 && (
             <div class="mb-4">
-              {post.categories.map((category: any) => (
-                <span class="text-sm font-semibold text-primary uppercase tracking-wider">
-                  {category.title}
-                </span>
+              {post.categories.map((category) => (
+                <span class="text-sm font-semibold text-primary uppercase tracking-wider">{category.title}</span>
               ))}
             </div>
           )
         }
 
-        <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        <h1
+          class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200"
+        >
           {post.title}
         </h1>
 
-        {
-          post.excerpt && (
-            <p class="text-xl text-muted dark:text-slate-400 mb-6">{post.excerpt}</p>
-          )
-        }
+        {post.excerpt && <p class="text-xl text-muted dark:text-slate-400 mb-6">{post.excerpt}</p>}
 
         <div class="flex items-center gap-4 mb-8">
           {
@@ -134,11 +156,7 @@ const metadata: MetaData = {
             )
           }
           <div>
-            {
-              post.author && (
-                <p class="text-base font-medium dark:text-slate-300">{post.author.name}</p>
-              )
-            }
+            {post.author && <p class="text-base font-medium dark:text-slate-300">{post.author.name}</p>}
             <time datetime={post.publishedAt} class="text-sm text-muted dark:text-slate-400">
               {
                 new Date(post.publishedAt).toLocaleDateString('en-US', {
@@ -178,7 +196,7 @@ const metadata: MetaData = {
           <footer class="mt-12 pt-8 border-t dark:border-slate-700">
             <div class="flex flex-wrap gap-2">
               <span class="text-sm font-medium dark:text-slate-300">Tags:</span>
-              {post.tags.map((tag: string) => (
+              {post.tags.map((tag) => (
                 <span class="text-sm px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-muted dark:text-slate-400">
                   {tag}
                 </span>
@@ -190,10 +208,7 @@ const metadata: MetaData = {
     </article>
 
     <div class="mt-12 pt-8 border-t dark:border-slate-700">
-      <a
-        href={getPermalink('/blog')}
-        class="inline-flex items-center text-primary hover:underline"
-      >
+      <a href={getPermalink('/blog')} class="inline-flex items-center text-primary hover:underline">
         <svg
           class="w-5 h-5 mr-2"
           fill="none"
@@ -201,11 +216,7 @@ const metadata: MetaData = {
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to Blog
       </a>

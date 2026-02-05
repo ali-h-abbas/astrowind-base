@@ -27,8 +27,9 @@ npm install
 ```
 
 This will install:
+
 - `@sanity/client` - For fetching data from Sanity
-- `@sanity/image-url` - For generating optimized image URLs  
+- `@sanity/image-url` - For generating optimized image URLs
 - `@portabletext/to-html` - For rendering Sanity's Portable Text to HTML
 - `sanity` (devDependency) - Sanity CLI and Studio
 
@@ -163,6 +164,7 @@ npm run studio:deploy
 ```
 
 When prompted:
+
 - Choose a Studio hostname (e.g., "astrowind-blog")
 - Your Studio will be available at `https://your-hostname.sanity.studio`
 
@@ -189,6 +191,7 @@ When prompted:
 ### Build and Deploy
 
 When you push changes to your repository, Cloudflare Pages will automatically:
+
 1. Install dependencies (including Sanity packages)
 2. Build your Astro site with `npm run build`
 3. Fetch blog posts from Sanity during build
@@ -240,7 +243,7 @@ Now your site will automatically rebuild whenever you publish or unpublish conte
 All Sanity schemas are located in `studio/schemaTypes/`:
 
 - `post.ts` - Blog post schema
-- `author.ts` - Author schema  
+- `author.ts` - Author schema
 - `category.ts` - Category schema
 - `blockContent.ts` - Rich text editor configuration
 
@@ -265,6 +268,7 @@ Feel free to customize these to match your needs. After making changes:
 ---
 
 **Next Steps**: Once everything is working, consider adding:
+
 - Author profile pages
 - Category/tag filtering
 - Search functionality

@@ -318,11 +318,13 @@ This repository includes integration with **Sanity.io**, a powerful headless CMS
 ### Quick Start
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Initialize Sanity project**:
+
    ```bash
    cd studio
    npx sanity init
@@ -331,6 +333,7 @@ This repository includes integration with **Sanity.io**, a powerful headless CMS
 3. **Configure environment variables** with your Sanity project ID (obtained from step 2)
 
 4. **Run Sanity Studio locally**:
+
    ```bash
    npm run studio:dev
    ```
@@ -342,6 +345,7 @@ This repository includes integration with **Sanity.io**, a powerful headless CMS
 For complete setup instructions, see **[docs/SANITY_SETUP.md](./docs/SANITY_SETUP.md)**
 
 The guide covers:
+
 - Creating a Sanity account and project
 - Configuring environment variables
 - Running Sanity Studio locally and deploying it
@@ -395,6 +399,7 @@ The Sanity blog integration is set up in a new `/blog` route, separate from the 
 - **Markdown blog** (if present): `/[...blog]/` - File-based content
 
 This allows you to:
+
 - Gradually migrate content from markdown to Sanity
 - Keep some content as markdown while using Sanity for new posts
 - Use Sanity for blog posts while planning future Sutra integration for course content
@@ -464,35 +469,43 @@ The `/api/subscribe` endpoint requires **server-side rendering** and will NOT wo
 **Deployment Options:**
 
 1. **Vercel (Recommended)**:
+
    ```bash
    npm install @astrojs/vercel
    ```
+
    Update `astro.config.ts`:
+
    ```typescript
    import vercel from '@astrojs/vercel/serverless';
-   
+
    export default defineConfig({
      output: 'static',
      adapter: vercel(),
      // ... rest of config
    });
    ```
+
    Then uncomment `export const prerender = false;` in `src/pages/api/subscribe.ts`
 
 2. **Netlify**:
+
    ```bash
    npm install @astrojs/netlify
    ```
+
    Update `astro.config.ts`:
+
    ```typescript
    import netlify from '@astrojs/netlify';
-   
+
    export default defineConfig({
      output: 'static',
      adapter: netlify(),
      // ... rest of config
    });
    ```
+
    Then uncomment `export const prerender = false;` in `src/pages/api/subscribe.ts`
 
 3. **Alternative for GitHub Pages**:
@@ -530,8 +543,9 @@ The `/api/subscribe` endpoint requires **server-side rendering** and will NOT wo
 #### Update Navigation
 
 Edit `src/navigation.ts` to customize:
+
 - Header links
-- Footer links  
+- Footer links
 - Social media links
 - CTA buttons
 
@@ -540,6 +554,7 @@ Edit `src/navigation.ts` to customize:
 Subscriber data is stored locally in `data/subscribers.json` (gitignored).
 
 **Access subscriber data**:
+
 ```typescript
 import { getSubscribers, getStats } from '~/lib/db';
 
@@ -561,11 +576,13 @@ console.log(stats);
 ### Testing Locally
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Start development server**:
+
    ```bash
    npm run dev
    ```
@@ -612,15 +629,18 @@ console.log(stats);
 ### Troubleshooting
 
 **Build fails with "No adapter installed"**:
+
 - The API route requires server-side rendering
 - Either install an adapter (Vercel/Netlify) or comment out the `export const prerender = false;` line in `src/pages/api/subscribe.ts`
 
 **ConvertKit subscription fails**:
+
 - Check that `CONVERTKIT_API_KEY` and `CONVERTKIT_FORM_ID` are set correctly
 - Verify the API key has proper permissions in ConvertKit
 - Check the console/logs for specific error messages
 
 **Emails not appearing in ConvertKit**:
+
 - Check spam filters
 - Verify the form ID is correct
 - Check ConvertKit dashboard for new subscribers
@@ -638,6 +658,7 @@ console.log(stats);
 ### Support
 
 For issues or questions about the meditation platform setup:
+
 1. Check the troubleshooting section above
 2. Review the inline code comments
 3. Open an issue on GitHub

@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from 'sanity';
 
 export default defineType({
   name: 'post',
@@ -32,7 +32,7 @@ export default defineType({
       name: 'author',
       title: 'Author',
       type: 'reference',
-      to: {type: 'author'},
+      to: { type: 'author' },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -55,13 +55,13 @@ export default defineType({
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'category'}}],
+      of: [{ type: 'reference', to: { type: 'category' } }],
     }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [{ type: 'string' }],
       options: {
         layout: 'tags',
       },
@@ -115,11 +115,11 @@ export default defineType({
       draft: 'draft',
     },
     prepare(selection) {
-      const {author, draft} = selection
+      const { author, draft } = selection;
       return {
         ...selection,
         subtitle: `${draft ? '🚧 DRAFT - ' : ''}${author ? `by ${author}` : 'No author'}`,
-      }
+      };
     },
   },
-})
+});
