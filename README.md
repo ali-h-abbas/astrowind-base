@@ -303,6 +303,111 @@ Initially created by **Arthelokyo** and maintained by a community of [contributo
 
 ---
 
+## 📝 Blog Management with Sanity CMS
+
+This repository includes integration with **Sanity.io**, a powerful headless CMS for managing blog posts. This allows content authors to create, edit, and publish blog content through an intuitive web-based interface without touching code.
+
+### Why Sanity?
+
+- **🎨 Intuitive Editor**: Rich text editing with real-time preview
+- **🚀 Fast & Scalable**: Built-in CDN for images and content
+- **🔄 Real-time Collaboration**: Multiple editors can work simultaneously
+- **📱 Portable Content**: Content as structured data, not HTML
+- **🌐 Hosted Studio**: Deploy your Studio to Sanity's cloud for free
+
+### Quick Start
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Initialize Sanity project**:
+   ```bash
+   cd studio
+   npx sanity init
+   ```
+
+3. **Configure environment variables** with your Sanity project ID (obtained from step 2)
+
+4. **Run Sanity Studio locally**:
+   ```bash
+   npm run studio:dev
+   ```
+
+5. **Create content** and publish your first blog post!
+
+### Detailed Setup Guide
+
+For complete setup instructions, see **[docs/SANITY_SETUP.md](./docs/SANITY_SETUP.md)**
+
+The guide covers:
+- Creating a Sanity account and project
+- Configuring environment variables
+- Running Sanity Studio locally and deploying it
+- Creating authors, categories, and blog posts
+- Deploying to Cloudflare Pages with Sanity integration
+- Troubleshooting common issues
+
+### Blog Features
+
+The Sanity integration provides:
+
+- **📄 Blog Posts**: Full-featured blog posts with rich text editing
+- **👤 Authors**: Author profiles with bio and social links
+- **🏷️ Categories**: Organize posts into categories
+- **🔖 Tags**: Add tags for better discoverability
+- **🖼️ Image Optimization**: Automatic image optimization via Sanity CDN
+- **✍️ Rich Text**: Support for headings, lists, links, images, and code blocks
+- **📝 Draft Mode**: Work on posts privately before publishing
+- **🔍 SEO**: Custom meta titles and descriptions per post
+
+### Content Workflow
+
+1. **Create/Edit** content in Sanity Studio (locally or hosted)
+2. **Preview** your changes in the Studio
+3. **Publish** when ready (uncheck "Draft")
+4. **Deploy** to Cloudflare Pages (automatically rebuilds with new content)
+
+### Available NPM Scripts
+
+```bash
+# Run Sanity Studio locally
+npm run studio:dev
+
+# Build Sanity Studio for production
+npm run studio:build
+
+# Deploy Sanity Studio to Sanity's hosted platform
+npm run studio:deploy
+```
+
+### Blog Routes
+
+- `/blog` - Blog index page with all published posts
+- `/blog/[slug]` - Individual blog post pages
+
+### Coexistence with Existing Blog
+
+The Sanity blog integration is set up in a new `/blog` route, separate from the existing `[...blog]` route that uses markdown files. Both can coexist:
+
+- **Sanity blog**: `/blog/` - CMS-managed content
+- **Markdown blog** (if present): `/[...blog]/` - File-based content
+
+This allows you to:
+- Gradually migrate content from markdown to Sanity
+- Keep some content as markdown while using Sanity for new posts
+- Use Sanity for blog posts while planning future Sutra integration for course content
+
+### Important Notes
+
+- **Project ID Required**: You must run `npx sanity init` and add your project ID to environment variables
+- **Static Build**: Blog posts are fetched at build time (static site generation)
+- **Cloudflare Compatible**: Fully compatible with Cloudflare Pages deployment
+- **No Breaking Changes**: Existing site functionality remains intact
+
+---
+
 ## 🧘 Meditation Platform Setup
 
 This repository has been configured as a meditation teacher/course website with email capture and ConvertKit integration.
