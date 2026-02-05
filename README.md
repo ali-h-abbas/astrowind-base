@@ -300,3 +300,241 @@ Initially created by **Arthelokyo** and maintained by a community of [contributo
 ## License
 
 **AstroWind** is licensed under the MIT license — see the [LICENSE](./LICENSE.md) file for details.
+
+---
+
+## 🧘 Meditation Platform Setup
+
+This repository has been configured as a meditation teacher/course website with email capture and ConvertKit integration.
+
+### Features
+
+- **Teacher-focused Homepage**: Showcases meditation teacher Sarah Chen with bio, journey, and offerings
+- **Meditation Bootcamp Landing Page**: Conversion-optimized page with email capture form
+- **Offerings Page**: Displays available meditation programs and courses
+- **API Email Capture**: Server-side API route for collecting emails and integrating with ConvertKit
+- **Database Tracking**: Local JSON database for storing subscriber information and analytics
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```bash
+# Site Configuration
+SITE=https://ali-h-abbas.github.io
+BASE_PATH=/astrowind-base
+
+# ConvertKit API Configuration
+CONVERTKIT_API_KEY=your_api_key_here
+CONVERTKIT_FORM_ID=your_form_id_here
+
+# Sutra Checkout (optional)
+SUTRA_CHECKOUT_URL=https://sutra.co/checkout/meditation-bootcamp-id
+```
+
+### ConvertKit Setup
+
+1. **Get API Key**:
+   - Log in to ConvertKit
+   - Go to Settings > Advanced > API & Webhooks
+   - Copy your API Key
+
+2. **Get Form ID**:
+   - Create a new Form in ConvertKit or use an existing one
+   - The Form ID is in the URL when editing the form
+   - Example: `https://app.convertkit.com/forms/123456` → Form ID is `123456`
+
+3. **Add to Environment Variables**:
+   ```bash
+   CONVERTKIT_API_KEY=your_actual_api_key
+   CONVERTKIT_FORM_ID=123456
+   ```
+
+### Deployment Considerations
+
+#### API Route Limitations
+
+The `/api/subscribe` endpoint requires **server-side rendering** and will NOT work on static hosting platforms like GitHub Pages.
+
+**Deployment Options:**
+
+1. **Vercel (Recommended)**:
+   ```bash
+   npm install @astrojs/vercel
+   ```
+   Update `astro.config.ts`:
+   ```typescript
+   import vercel from '@astrojs/vercel/serverless';
+   
+   export default defineConfig({
+     output: 'static',
+     adapter: vercel(),
+     // ... rest of config
+   });
+   ```
+   Then uncomment `export const prerender = false;` in `src/pages/api/subscribe.ts`
+
+2. **Netlify**:
+   ```bash
+   npm install @astrojs/netlify
+   ```
+   Update `astro.config.ts`:
+   ```typescript
+   import netlify from '@astrojs/netlify';
+   
+   export default defineConfig({
+     output: 'static',
+     adapter: netlify(),
+     // ... rest of config
+   });
+   ```
+   Then uncomment `export const prerender = false;` in `src/pages/api/subscribe.ts`
+
+3. **Alternative for GitHub Pages**:
+   If you must use GitHub Pages, consider these alternatives:
+   - Use a third-party form service like [FormSpree](https://formspree.io/) or [Basin](https://usebasin.com/)
+   - Use ConvertKit's embeddable forms instead of the custom form
+   - Use a serverless function (AWS Lambda, Cloudflare Workers) as a separate endpoint
+
+### Customization Guide
+
+#### Update Teacher Information
+
+1. **Name and Bio**:
+   - Edit `src/pages/index.astro`
+   - Search for "Sarah Chen" and replace with actual teacher name
+   - Update the bio and journey content
+
+2. **Images**:
+   - Replace Unsplash URLs with actual teacher photos
+   - Update image URLs in:
+     - `src/pages/index.astro` (Hero, About, Testimonials)
+     - `src/pages/landing/meditation-bootcamp.astro`
+     - `src/pages/offerings.astro`
+
+3. **Course Content**:
+   - Edit `src/pages/landing/meditation-bootcamp.astro`
+   - Update program details, pricing, and benefits
+   - Modify FAQ section with actual questions
+
+4. **Sutra Checkout Integration**:
+   - Get your actual Sutra checkout URL
+   - Update `.env` with `SUTRA_CHECKOUT_URL`
+   - Or directly update the URL in `src/pages/landing/meditation-bootcamp.astro`
+
+#### Update Navigation
+
+Edit `src/navigation.ts` to customize:
+- Header links
+- Footer links  
+- Social media links
+- CTA buttons
+
+### Database
+
+Subscriber data is stored locally in `data/subscribers.json` (gitignored).
+
+**Access subscriber data**:
+```typescript
+import { getSubscribers, getStats } from '~/lib/db';
+
+// Get all subscribers
+const subscribers = getSubscribers();
+
+// Get statistics
+const stats = getStats();
+console.log(stats);
+// {
+//   total: 150,
+//   bySource: { 'meditation-bootcamp': 150 },
+//   convertKit: { success: 145, error: 5, pending: 0 }
+// }
+```
+
+**Note**: For production, consider migrating to a proper database like Supabase or Firebase.
+
+### Testing Locally
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Start development server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Test email capture**:
+   - Visit `http://localhost:4321/landing/meditation-bootcamp`
+   - Fill out the email form
+   - Check `data/subscribers.json` for the new entry
+
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+### Project Structure (Meditation Platform Additions)
+
+```
+/
+├── src/
+│   ├── lib/
+│   │   └── db.ts                              # Database helper functions
+│   ├── pages/
+│   │   ├── api/
+│   │   │   └── subscribe.ts                   # Email capture API endpoint
+│   │   ├── landing/
+│   │   │   └── meditation-bootcamp.astro      # Bootcamp landing page
+│   │   ├── offerings.astro                    # Offerings page
+│   │   └── index.astro                        # Teacher homepage
+│   └── navigation.ts                           # Updated navigation
+├── data/
+│   ├── .gitkeep
+│   └── subscribers.json                        # (gitignored) Subscriber database
+└── .env.example                                # Environment variables template
+```
+
+### Security Best Practices
+
+1. **Never commit API keys**: Always use environment variables
+2. **Rate limiting**: The API route includes basic rate limiting (5 requests/minute per IP)
+3. **Email validation**: Both client-side and server-side validation
+4. **HTTPS only**: Always use HTTPS in production
+5. **CORS**: Configure CORS headers if needed for your deployment
+
+### Troubleshooting
+
+**Build fails with "No adapter installed"**:
+- The API route requires server-side rendering
+- Either install an adapter (Vercel/Netlify) or comment out the `export const prerender = false;` line in `src/pages/api/subscribe.ts`
+
+**ConvertKit subscription fails**:
+- Check that `CONVERTKIT_API_KEY` and `CONVERTKIT_FORM_ID` are set correctly
+- Verify the API key has proper permissions in ConvertKit
+- Check the console/logs for specific error messages
+
+**Emails not appearing in ConvertKit**:
+- Check spam filters
+- Verify the form ID is correct
+- Check ConvertKit dashboard for new subscribers
+- Review `data/subscribers.json` to see if the API call succeeded locally
+
+### Future Enhancements
+
+- [ ] Migration to Supabase/Firebase for database
+- [ ] Advanced analytics dashboard
+- [ ] Email automation sequences in ConvertKit
+- [ ] Payment tracking integration with Stripe
+- [ ] User authentication for course access
+- [ ] CMS integration for content management
+
+### Support
+
+For issues or questions about the meditation platform setup:
+1. Check the troubleshooting section above
+2. Review the inline code comments
+3. Open an issue on GitHub
+
+---
