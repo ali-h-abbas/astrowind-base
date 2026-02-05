@@ -52,6 +52,12 @@ export const getPermalink = (slug = '', type = 'page'): string => {
     return slug;
   }
 
+  // Handle home page with hash anchor (e.g., '/#about' -> '/base#about')
+  if (slug.startsWith('/#')) {
+    const hash = slug.substring(1); // Remove the leading '/'
+    return definitivePermalink('/') + hash;
+  }
+
   switch (type) {
     case 'home':
       permalink = getHomePermalink();

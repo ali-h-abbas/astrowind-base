@@ -8,7 +8,7 @@ export const headerData = {
     },
     {
       text: 'About',
-      href: '#about',
+      href: getPermalink('/#about'),
     },
     {
       text: 'Offerings',
@@ -42,7 +42,7 @@ export const footerData = {
       title: 'Resources',
       links: [
         { text: 'Blog', href: getBlogPermalink() },
-        { text: 'About', href: '#about' },
+        { text: 'About', href: getPermalink('/#about') },
         { text: 'Contact', href: getPermalink('/contact') },
       ],
     },
