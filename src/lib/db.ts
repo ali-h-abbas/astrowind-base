@@ -1,7 +1,7 @@
 /**
  * Simple file-based database for storing subscriber information
  * This is a basic implementation for tracking email signups
- * 
+ *
  * ⚠️ IMPORTANT: This file-based database is for DEVELOPMENT/TESTING ONLY
  * - In serverless environments (Vercel, Netlify), the file system is read-only or ephemeral
  * - Data will be lost between deployments

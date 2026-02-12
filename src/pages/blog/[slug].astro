@@ -1,0 +1,225 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { sanityClient, urlFor } from '~/lib/sanity';
+import { getPermalink, getCanonical } from '~/utils/permalinks';
+import { toHTML } from '@portabletext/to-html';
+import type { MetaData } from '~/types';
+import type { SanityPost, SanityImage } from '~/lib/sanity-types';
+
+interface PostSlug {
+  slug: string;
+}
+
+interface PortableTextImageValue extends SanityImage {
+  alt?: string;
+  caption?: string;
+}
+
+interface PortableTextCodeValue {
+  code: string;
+  language?: string;
+}
+
+interface PortableTextLinkValue {
+  href?: string;
+  blank?: boolean;
+}
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+  // Return empty array if Sanity client is not configured
+  if (!sanityClient) {
+    return [];
+  }
+
+  const posts: PostSlug[] = await sanityClient.fetch(
+    `*[_type == "post" && draft != true] {
+      "slug": slug.current
+    }`
+  );
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+
+// Fetch the full post content (only if client is configured)
+const post: SanityPost | null = sanityClient
+  ? await sanityClient.fetch(
+      `*[_type == "post" && slug.current == $slug && draft != true][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    "author": author->{name, "slug": slug.current, image, bio},
+    "categories": categories[]->{ title, "slug": slug.current },
+    tags,
+    mainImage,
+    publishedAt,
+    body,
+    seo
+  }`,
+      { slug }
+    )
+  : null;
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+// Convert Portable Text to HTML
+const bodyHtml = post.body
+  ? toHTML(post.body as Parameters<typeof toHTML>[0], {
+      components: {
+        types: {
+          image: ({ value }: { value: PortableTextImageValue }) => {
+            const imageUrl = urlFor(value).width(800).url();
+            return `<figure class="my-8">
+              <img src="${imageUrl}" alt="${value.alt || ''}" class="w-full rounded-lg" loading="lazy" />
+              ${value.caption ? `<figcaption class="text-center text-sm text-muted mt-2">${value.caption}</figcaption>` : ''}
+            </figure>`;
+          },
+          code: ({ value }: { value: PortableTextCodeValue }) => {
+            return `<pre class="my-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-x-auto"><code class="language-${value.language || 'text'}">${value.code}</code></pre>`;
+          },
+        },
+        marks: {
+          link: ({ children, value }: { children?: string; value?: PortableTextLinkValue }) => {
+            const target = value?.blank ? '_blank' : '_self';
+            const rel = value?.blank ? 'noopener noreferrer' : '';
+            return `<a href="${value?.href}" target="${target}" rel="${rel}" class="text-primary hover:underline">${children}</a>`;
+          },
+        },
+      },
+    })
+  : '';
+
+const url = getCanonical(getPermalink(`blog/${post.slug}`, 'post'));
+const imageUrl = post.mainImage ? urlFor(post.mainImage).width(1200).height(630).url() : undefined;
+
+const metadata: MetaData = {
+  title: post.seo?.metaTitle || post.title,
+  description: post.seo?.metaDescription || post.excerpt,
+  canonical: url.toString(),
+  openGraph: {
+    type: 'article',
+    ...(imageUrl
+      ? {
+          images: [
+            {
+              url: imageUrl,
+              width: 1200,
+              height: 630,
+            },
+          ],
+        }
+      : {}),
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
+    <article>
+      <header class="mb-8">
+        {
+          post.categories && post.categories.length > 0 && (
+            <div class="mb-4">
+              {post.categories.map((category) => (
+                <span class="text-sm font-semibold text-primary uppercase tracking-wider">{category.title}</span>
+              ))}
+            </div>
+          )
+        }
+
+        <h1
+          class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200"
+        >
+          {post.title}
+        </h1>
+
+        {post.excerpt && <p class="text-xl text-muted dark:text-slate-400 mb-6">{post.excerpt}</p>}
+
+        <div class="flex items-center gap-4 mb-8">
+          {
+            post.author?.image && (
+              <img
+                src={urlFor(post.author.image).width(48).height(48).url()}
+                alt={post.author.name}
+                class="rounded-full w-12 h-12"
+                loading="lazy"
+              />
+            )
+          }
+          <div>
+            {post.author && <p class="text-base font-medium dark:text-slate-300">{post.author.name}</p>}
+            <time datetime={post.publishedAt} class="text-sm text-muted dark:text-slate-400">
+              {
+                new Date(post.publishedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })
+              }
+            </time>
+          </div>
+        </div>
+
+        {
+          post.mainImage && (
+            <img
+              src={urlFor(post.mainImage).width(1200).height(675).url()}
+              alt={post.mainImage.alt || post.title}
+              class="w-full rounded-lg shadow-lg mb-8"
+              loading="eager"
+            />
+          )
+        }
+      </header>
+
+      <div
+        class="prose prose-lg dark:prose-invert max-w-none
+               prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold
+               prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+               prose-img:rounded-lg prose-img:shadow-lg
+               prose-code:before:content-[''] prose-code:after:content-['']
+               prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded"
+        set:html={bodyHtml}
+      />
+
+      {
+        post.tags && post.tags.length > 0 && (
+          <footer class="mt-12 pt-8 border-t dark:border-slate-700">
+            <div class="flex flex-wrap gap-2">
+              <span class="text-sm font-medium dark:text-slate-300">Tags:</span>
+              {post.tags.map((tag) => (
+                <span class="text-sm px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-muted dark:text-slate-400">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </footer>
+        )
+      }
+    </article>
+
+    <div class="mt-12 pt-8 border-t dark:border-slate-700">
+      <a href={getPermalink('/blog')} class="inline-flex items-center text-primary hover:underline">
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Blog
+      </a>
+    </div>
+  </section>
+</Layout>

@@ -217,16 +217,16 @@ export const POST: APIRoute = async ({ request }) => {
 
 /**
  * DEPLOYMENT CONFIGURATION:
- * 
+ *
  * This API route uses `prerender: false` which requires server-side rendering.
  * The line is currently COMMENTED OUT for GitHub Pages compatibility (static builds).
- * 
+ *
  * ✅ TO ENABLE API ROUTE (for serverless deployments):
  * 1. Install an adapter: `npm install @astrojs/vercel` or `npm install @astrojs/netlify`
  * 2. Update astro.config.ts to include the adapter
  * 3. UNCOMMENT the line below: `export const prerender = false;`
  * 4. Deploy to Vercel, Netlify, or other serverless platform
- * 
+ *
  * ❌ FOR GITHUB PAGES (static hosting):
  * - Keep this line commented out
  * - Use alternative form services (FormSpree, Basin, etc.)
