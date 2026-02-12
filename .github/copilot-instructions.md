@@ -14,6 +14,7 @@ This is an **Astro-based landing site** designed for a **simple course enrollmen
 ### Tech Stack
 - **Framework**: Astro 5.0 (Static Site Generation)
 - **Styling**: Tailwind CSS with dark mode support
+- **CMS**: Sanity.io (Headless CMS for blog content management)
 - **Payment**: Stripe Checkout (external)
 - **Analytics**: Google Analytics (configured in `src/config.yaml`)
 - **Automation**: Zapier (external, triggered by Stripe webhooks)
@@ -27,14 +28,22 @@ This is an **Astro-based landing site** designed for a **simple course enrollmen
 ```
 src/
 ├── pages/           # Route pages (.astro files)
+│   └── blog/       # Sanity-powered blog routes
 ├── components/      # Reusable Astro components
 │   ├── widgets/    # Pre-built UI sections (Hero, CTA, Pricing, etc.)
 │   └── ui/         # Smaller UI components
 ├── layouts/         # Page layouts (PageLayout, LandingLayout)
+├── lib/             # Utility libraries
+│   ├── sanity.ts   # Sanity client configuration
+│   └── sanity-types.ts  # TypeScript types for Sanity data
 ├── content/         # Blog posts (MDX/Markdown)
 ├── assets/          # Images, styles (processed)
 ├── config.yaml      # Site configuration
 └── navigation.ts    # Navigation menu configuration
+studio/              # Sanity Studio (CMS)
+├── schemaTypes/    # Content schemas (post, author, category)
+├── sanity.config.ts # Studio configuration
+└── package.json    # Separate dependencies for Studio
 ```
 
 ### Astro Component Conventions
@@ -59,6 +68,12 @@ src/
 - **Navigation**: `src/navigation.ts`
   - Header links and actions
   - Footer structure
+- **Sanity CMS**: Environment variables for blog
+  - `PUBLIC_SANITY_PROJECT_ID` - Your Sanity project ID
+  - `PUBLIC_SANITY_DATASET` - Dataset name (usually "production")
+  - Configure in `.env` file (see `.env.example`)
+
+**Note**: The Sanity blog (`/blog`) coexists with the traditional markdown blog (`[...blog]`). Both can be used simultaneously for different content types.
 
 ---
 
@@ -137,6 +152,25 @@ const metadata = {
   >
   ```
 - Consider adding Facebook Pixel or other tracking pixels in `src/layouts/Layout.astro`
+
+### Blog Management with Sanity CMS
+- Blog content is managed through **Sanity.io**, a headless CMS
+- Blog routes:
+  - `/blog` - Post index page (fetches from Sanity)
+  - `/blog/[slug]` - Individual post pages
+- **Sanity Studio**: Web-based editor for managing posts, authors, and categories
+  - Run locally: `npm run studio:dev` (starts at `http://localhost:3333`)
+  - Deploy: `npm run studio:deploy`
+- **Content Types**:
+  - **Posts**: Rich text with code blocks, images, headings, links
+  - **Authors**: Profile with bio and social links
+  - **Categories**: Organize posts by topic
+- **Setup Required** (first time):
+  1. `cd studio && npx sanity init` to create Sanity project
+  2. Add `PUBLIC_SANITY_PROJECT_ID` to environment variables
+  3. Run `npm run studio:dev` to start Studio
+- **Graceful Degradation**: Site builds successfully without Sanity configured (shows setup message)
+- See `docs/SANITY_SETUP.md` for complete setup instructions
 
 ### Zapier Automation Context
 - Stripe webhooks are handled **outside this codebase** (in Zapier)

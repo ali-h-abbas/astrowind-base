@@ -21,7 +21,10 @@
     "check:prettier": "prettier --check .",
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
-    "fix:prettier": "prettier -w ."
+    "fix:prettier": "prettier -w .",
+    "studio:dev": "cd studio && npm run dev",
+    "studio:build": "cd studio && npm run build",
+    "studio:deploy": "cd studio && npx sanity deploy"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.12",
@@ -61,6 +64,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "reading-time": "^1.5.0",
+    "sanity": "^3.60.0",
     "sharp": "0.34.3",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.17",
