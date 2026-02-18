@@ -49,9 +49,13 @@ function checkRateLimit(ip: string): boolean {
 /**
  * Subscribe to ConvertKit
  */
-async function subscribeToConvertKit(email: string, name: string): Promise<{ success: boolean; error?: string }> {
-  const apiKey = import.meta.env.CONVERTKIT_API_KEY;
-  const formId = import.meta.env.CONVERTKIT_FORM_ID;
+async function subscribeToConvertKit(
+  email: string,
+  name: string,
+  env: { CONVERTKIT_API_KEY?: string; CONVERTKIT_FORM_ID?: string }
+): Promise<{ success: boolean; error?: string }> {
+  const apiKey = env.CONVERTKIT_API_KEY;
+  const formId = env.CONVERTKIT_FORM_ID;
 
   // If ConvertKit is not configured, skip but don't fail
   if (!apiKey || !formId) {
@@ -192,7 +196,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Subscribe to ConvertKit
-    const convertkitResult = await subscribeToConvertKit(email, name);
+    const convertkitResult = await subscribeToConvertKit(email, name, locals.runtime?.env || {});
 
     // Store in database regardless of ConvertKit result
     const subscriber = {
