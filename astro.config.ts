@@ -22,11 +22,11 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
   hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
 
 // NOTE: The 'site' and 'base' values must match the values in src/config.yaml
-// for proper asset path generation. Use environment variables (SITE and BASE_PATH)
-// to override these defaults for different deployment targets.
+// for proper asset path generation. Use process.env (not import.meta.env) for
+// build-time configuration to ensure compatibility with Cloudflare Pages and other CI/CD platforms.
 export default defineConfig({
-  site: import.meta.env.SITE || 'https://ali-h-abbas.github.io',
-  base: import.meta.env.BASE_PATH || '/astrowind-base',
+  site: process.env.SITE || 'https://ali-h-abbas.github.io',
+  base: process.env.BASE_PATH || '/',
   output: 'static', // Keep static for GitHub Pages; API route uses prerender: false
 
   integrations: [
