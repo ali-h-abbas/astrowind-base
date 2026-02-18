@@ -8,7 +8,7 @@ import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
-import compress from 'astro-compress';
+// import compress from 'astro-compress'; // Disabled for Cloudflare Pages deployment
 import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
@@ -58,18 +58,25 @@ export default defineConfig({
       })
     ),
 
-    compress({
-      CSS: true,
-      HTML: {
-        'html-minifier-terser': {
-          removeAttributeQuotes: false,
-        },
-      },
-      Image: false,
-      JavaScript: true,
-      SVG: false,
-      Logger: 1,
-    }),
+    // Temporarily disabled due to conflicts with Cloudflare Pages compression.
+    // Issue: astro-compress compresses files during build, then Cloudflare Pages
+    // compresses them again, resulting in NS_ERROR_CORRUPTED_CONTENT errors for
+    // CSS and JavaScript files in the browser.
+    // Solution: Let Cloudflare handle compression at the edge for optimal performance.
+    // Note: If deploying to GitHub Pages, Vercel, or other platforms that don't
+    // automatically compress assets, you can re-enable this integration.
+    // compress({
+    //   CSS: true,
+    //   HTML: {
+    //     'html-minifier-terser': {
+    //       removeAttributeQuotes: false,
+    //     },
+    //   },
+    //   Image: false,
+    //   JavaScript: true,
+    //   SVG: false,
+    //   Logger: 1,
+    // }),
 
     astrowind({
       config: './src/config.yaml',
