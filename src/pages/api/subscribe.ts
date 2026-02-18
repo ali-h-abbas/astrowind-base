@@ -91,8 +91,28 @@ async function subscribeToConvertKit(email: string, name: string): Promise<{ suc
   }
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    // Access Cloudflare KV namespace from runtime environment
+    // IMPORTANT: This requires KV namespace binding in Cloudflare Pages settings
+    // Variable name: SUBSCRIBERS
+    // See README.md for setup instructions
+    const kv = locals.runtime?.env?.SUBSCRIBERS;
+
+    if (!kv) {
+      console.error('KV namespace SUBSCRIBERS is not bound. Please configure in Cloudflare Pages settings.');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Database configuration error. Please contact support.',
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     // Get client IP for rate limiting (in production, use proper IP extraction)
     const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
 
@@ -158,7 +178,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Check if email already exists (optional - you might want to allow resubscriptions)
-    if (emailExists(email)) {
+    if (await emailExists(kv, email)) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -186,7 +206,7 @@ export const POST: APIRoute = async ({ request }) => {
       convertKitError: convertkitResult.error,
     };
 
-    addSubscriber(subscriber);
+    await addSubscriber(kv, subscriber);
 
     // Return success even if ConvertKit failed (we still have the lead)
     return new Response(

@@ -1,27 +1,32 @@
 /**
- * Simple file-based database for storing subscriber information
- * This is a basic implementation for tracking email signups
+ * Cloudflare KV-based database for storing subscriber information
+ * This implementation uses Cloudflare Workers KV for persistent storage
  *
- * ⚠️ IMPORTANT: This file-based database is for DEVELOPMENT/TESTING ONLY
- * - In serverless environments (Vercel, Netlify), the file system is read-only or ephemeral
- * - Data will be lost between deployments
- * - For PRODUCTION use, migrate to a proper database:
- *   - Supabase (recommended for serverless)
- *   - Firebase Firestore
- *   - MongoDB Atlas
- *   - PostgreSQL with connection pooling
+ * ✅ PRODUCTION-READY for Cloudflare Pages
+ * - Data is persisted across deployments
+ * - Encrypted at rest by Cloudflare
+ * - Global edge network for low latency
+ *
+ * ⚠️ IMPORTANT: Requires KV namespace binding in Cloudflare Pages
+ * - KV namespace must be named "SUBSCRIBERS" in Cloudflare Pages settings
+ * - See README.md for setup instructions
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Path to the subscribers database file
-// NOTE: This path works in local development but will NOT persist in serverless deployments
-const DB_PATH = path.resolve(__dirname, '../../data/subscribers.json');
+/**
+ * Cloudflare KV Namespace type
+ * This represents the KV storage interface provided by Cloudflare Workers
+ */
+export interface KVNamespace {
+  get(key: string, options?: { type: 'text' }): Promise<string | null>;
+  get<T = unknown>(key: string, options: { type: 'json' }): Promise<T | null>;
+  put(key: string, value: string): Promise<void>;
+  delete(key: string): Promise<void>;
+  list(options?: { prefix?: string; limit?: number; cursor?: string }): Promise<{
+    keys: Array<{ name: string; expiration?: number; metadata?: unknown }>;
+    list_complete: boolean;
+    cursor?: string;
+  }>;
+}
 
 export interface Subscriber {
   email: string;
@@ -35,72 +40,92 @@ export interface Subscriber {
 }
 
 /**
- * Initialize the database file if it doesn't exist
+ * Read all subscribers from KV storage
+ * @param kv - Cloudflare KV namespace
+ * @returns Array of all subscribers
  */
-function initDatabase(): void {
-  const dir = path.dirname(DB_PATH);
-
-  // Create data directory if it doesn't exist
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-
-  // Create database file if it doesn't exist
-  if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify([], null, 2));
-  }
-}
-
-/**
- * Read all subscribers from the database
- */
-export function getSubscribers(): Subscriber[] {
+export async function getSubscribers(kv: KVNamespace): Promise<Subscriber[]> {
   try {
-    initDatabase();
-    const data = fs.readFileSync(DB_PATH, 'utf-8');
-    return JSON.parse(data);
+    const subscribers: Subscriber[] = [];
+    let cursor: string | undefined = undefined;
+    let hasMore = true;
+
+    // KV list operation returns paginated results
+    while (hasMore) {
+      const result = await kv.list({ prefix: 'subscriber:', limit: 1000, cursor });
+
+      // Fetch each subscriber's data
+      for (const key of result.keys) {
+        const subscriber = await kv.get<Subscriber>(key.name, { type: 'json' });
+        if (subscriber) {
+          subscribers.push(subscriber);
+        }
+      }
+
+      hasMore = !result.list_complete;
+      cursor = result.cursor;
+    }
+
+    return subscribers;
   } catch (error) {
-    console.error('Error reading subscribers:', error);
+    console.error('Error reading subscribers from KV:', error);
     return [];
   }
 }
 
 /**
- * Add a new subscriber to the database
+ * Add a new subscriber to KV storage
+ * @param kv - Cloudflare KV namespace
+ * @param subscriber - Subscriber data to store
  */
-export function addSubscriber(subscriber: Subscriber): void {
+export async function addSubscriber(kv: KVNamespace, subscriber: Subscriber): Promise<void> {
   try {
-    initDatabase();
-    const subscribers = getSubscribers();
-    subscribers.push(subscriber);
-    fs.writeFileSync(DB_PATH, JSON.stringify(subscribers, null, 2));
+    // Use lowercased email as the key for consistency and duplicate prevention
+    const key = `subscriber:${subscriber.email.toLowerCase()}`;
+
+    // Store the full subscriber object as JSON
+    await kv.put(key, JSON.stringify(subscriber));
   } catch (error) {
-    console.error('Error adding subscriber:', error);
+    console.error('Error adding subscriber to KV:', error);
     throw new Error('Failed to save subscriber to database');
   }
 }
 
 /**
- * Check if an email already exists in the database
+ * Check if an email already exists in KV storage
+ * @param kv - Cloudflare KV namespace
+ * @param email - Email address to check
+ * @returns True if email exists, false otherwise
  */
-export function emailExists(email: string): boolean {
-  const subscribers = getSubscribers();
-  return subscribers.some((sub) => sub.email.toLowerCase() === email.toLowerCase());
+export async function emailExists(kv: KVNamespace, email: string): Promise<boolean> {
+  try {
+    const key = `subscriber:${email.toLowerCase()}`;
+    const subscriber = await kv.get(key);
+    return subscriber !== null;
+  } catch (error) {
+    console.error('Error checking email existence in KV:', error);
+    return false;
+  }
 }
 
 /**
  * Get subscribers by source (landing page)
+ * @param kv - Cloudflare KV namespace
+ * @param source - Source identifier to filter by
+ * @returns Array of subscribers from the specified source
  */
-export function getSubscribersBySource(source: string): Subscriber[] {
-  const subscribers = getSubscribers();
+export async function getSubscribersBySource(kv: KVNamespace, source: string): Promise<Subscriber[]> {
+  const subscribers = await getSubscribers(kv);
   return subscribers.filter((sub) => sub.source === source);
 }
 
 /**
- * Get subscription statistics
+ * Get subscription statistics from KV storage
+ * @param kv - Cloudflare KV namespace
+ * @returns Statistics object with counts by source and ConvertKit status
  */
-export function getStats() {
-  const subscribers = getSubscribers();
+export async function getStats(kv: KVNamespace) {
+  const subscribers = await getSubscribers(kv);
   const total = subscribers.length;
   const bySource = subscribers.reduce(
     (acc, sub) => {
