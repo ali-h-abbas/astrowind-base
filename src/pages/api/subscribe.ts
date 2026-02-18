@@ -219,17 +219,15 @@ export const POST: APIRoute = async ({ request }) => {
  * DEPLOYMENT CONFIGURATION:
  *
  * This API route uses `prerender: false` which requires server-side rendering.
- * The line is currently COMMENTED OUT for GitHub Pages compatibility (static builds).
+ * This is enabled for Cloudflare Pages deployment which supports SSR via Functions.
  *
- * ✅ TO ENABLE API ROUTE (for serverless deployments):
- * 1. Install an adapter: `npm install @astrojs/vercel` or `npm install @astrojs/netlify`
- * 2. Update astro.config.ts to include the adapter
- * 3. UNCOMMENT the line below: `export const prerender = false;`
- * 4. Deploy to Vercel, Netlify, or other serverless platform
+ * ✅ CLOUDFLARE PAGES (SSR enabled):
+ * - The `prerender: false` line below enables server-side rendering
+ * - This route will be handled by Cloudflare Workers/Functions
+ * - Make sure astro.config.ts has output: 'server' and adapter: cloudflare()
  *
- * ❌ FOR GITHUB PAGES (static hosting):
- * - Keep this line commented out
- * - Use alternative form services (FormSpree, Basin, etc.)
- * - Or use ConvertKit's native embeddable forms
+ * For other platforms (Vercel, Netlify, etc.):
+ * - Install the appropriate adapter (@astrojs/vercel, @astrojs/netlify)
+ * - Update astro.config.ts with the correct adapter
  */
-// export const prerender = false;
+export const prerender = false;

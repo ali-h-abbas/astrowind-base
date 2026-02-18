@@ -273,6 +273,26 @@ Clone this repository on your own GitHub account and deploy to Vercel:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Farthelokyo%2Fastrowind)
 
+#### Deploy to Cloudflare Pages
+
+This template is optimized for Cloudflare Pages with SSR support via Cloudflare Functions.
+
+1. **Connect your repository** to Cloudflare Pages
+2. **Build settings**:
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+   - Node version: `18` or higher
+
+3. **Environment Variables** (in Cloudflare Pages Dashboard):
+   - `SITE`: Your Cloudflare Pages URL (e.g., `https://your-site.pages.dev`)
+   - `BASE_PATH`: `/` (for root domain deployment)
+   - `CONVERTKIT_API_KEY`: (optional) Your ConvertKit API key
+   - `CONVERTKIT_FORM_ID`: (optional) Your ConvertKit form ID
+
+4. **Update Sutra URL**: Edit `src/pages/landing/meditation-bootcamp.astro` and replace `https://sutra.co/checkout/your-course-id-here` with your actual Sutra checkout URL
+
+The API route will work automatically with Cloudflare Pages Functions.
+
 <br>
 
 ## Frequently Asked Questions

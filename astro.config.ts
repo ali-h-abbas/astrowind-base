@@ -10,6 +10,7 @@ import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
+import cloudflare from '@astrojs/cloudflare';
 
 import astrowind from './vendor/integration';
 
@@ -27,7 +28,8 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   site: process.env.SITE || 'https://ali-h-abbas.github.io',
   base: process.env.BASE_PATH || '/',
-  output: 'static', // Keep static for GitHub Pages; API route uses prerender: false
+  output: 'server', // Server-side rendering for Cloudflare Pages
+  adapter: cloudflare(),
 
   integrations: [
     tailwind({
