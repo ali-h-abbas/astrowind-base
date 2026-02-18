@@ -286,12 +286,16 @@ This template is optimized for Cloudflare Pages with SSR support via Cloudflare 
 3. **Environment Variables** (in Cloudflare Pages Dashboard):
    - `SITE`: Your Cloudflare Pages URL (e.g., `https://your-site.pages.dev`)
    - `BASE_PATH`: `/` (for root domain deployment)
-   - `CONVERTKIT_API_KEY`: (optional) Your ConvertKit API key
-   - `CONVERTKIT_FORM_ID`: (optional) Your ConvertKit form ID
+   - `CONVERTKIT_API_KEY`: (secret) Your ConvertKit API key
+   - `CONVERTKIT_FORM_ID`: (text) Your ConvertKit form ID
 
-4. **Update Sutra URL**: Edit `src/pages/landing/meditation-bootcamp.astro` and replace `https://sutra.co/checkout/your-course-id-here` with your actual Sutra checkout URL
+4. **KV Namespace Setup** (Required for email subscriptions):
+   - See the [Cloudflare KV Setup](#cloudflare-kv-setup) section below for detailed instructions
+   - This is required for the `/api/subscribe` endpoint to work
 
-The API route will work automatically with Cloudflare Pages Functions.
+5. **Update Sutra URL**: Edit `src/pages/landing/meditation-bootcamp.astro` and replace `https://sutra.co/checkout/your-course-id-here` with your actual Sutra checkout URL
+
+The API route will work automatically with Cloudflare Pages Functions once KV is properly configured.
 
 <br>
 
@@ -479,6 +483,41 @@ SUTRA_CHECKOUT_URL=https://sutra.co/checkout/meditation-bootcamp-id
    CONVERTKIT_API_KEY=your_actual_api_key
    CONVERTKIT_FORM_ID=123456
    ```
+
+### Cloudflare KV Setup
+
+The email subscription system uses **Cloudflare Workers KV** for persistent storage of subscriber data. This setup is required for the `/api/subscribe` endpoint to work in production.
+
+1. **Create KV Namespace:**
+   - Go to Cloudflare Dashboard → **Workers & Pages** → **KV**
+   - Click "**Create a namespace**"
+   - Production namespace name: `astrowind_subscribers`
+   - Preview namespace name (for preview deployments): `astrowind_subscribers_preview`
+
+2. **Bind KV to Pages Project:**
+   - Go to your Pages project in Cloudflare Dashboard
+   - Navigate to **Settings** → **Functions**
+   - Scroll down to "**KV namespace bindings**"
+   - Click "**Add binding**"
+   - For **Production**:
+     - Variable name: `SUBSCRIBERS`
+     - KV namespace: Select `astrowind_subscribers`
+   - For **Preview** (optional but recommended):
+     - Add another binding with variable name: `SUBSCRIBERS`
+     - KV namespace: Select `astrowind_subscribers_preview`
+
+3. **Configure Environment Variables:**
+   - In the same Cloudflare Pages settings, go to **Environment variables**
+   - Add the following variables:
+     - `CONVERTKIT_API_KEY` (secret) - Your ConvertKit API key
+     - `CONVERTKIT_FORM_ID` (text) - Your ConvertKit form ID
+
+4. **Redeploy:**
+   - After adding KV bindings and environment variables, trigger a new deployment
+   - KV bindings only take effect on new deployments
+   - You can trigger a redeploy by pushing a new commit or manually in the Cloudflare dashboard
+
+**Note:** The KV namespace variable name MUST be `SUBSCRIBERS` (all caps) as this is what the code expects.
 
 ### Deployment Considerations
 
