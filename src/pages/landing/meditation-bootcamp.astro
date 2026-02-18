@@ -279,17 +279,31 @@ const SUTRA_CHECKOUT_URL = import.meta.env.SUTRA_CHECKOUT_URL || 'https://sutra.
       const result = await response.json();
 
       if (response.ok && result.success) {
-        // Show success message and hide form
+        // Show success message briefly
         form.classList.add('hidden');
         successMessage.classList.remove('hidden');
 
-        // Track conversion (you can add analytics here)
+        // Update success message to indicate redirect
+        const successTitle = successMessage.querySelector('h3');
+        const successText = successMessage.querySelector('p');
+        if (successTitle) successTitle.textContent = '🎉 Almost there!';
+        if (successText) successText.textContent = 'Redirecting you to complete your purchase...';
+
+        // Track conversion
         if (typeof window.gtag !== 'undefined') {
           window.gtag('event', 'generate_lead', {
             event_category: 'engagement',
             event_label: 'meditation_bootcamp_signup',
           });
         }
+
+        // Redirect to Sutra checkout after 2 seconds
+        // TODO: Replace with your actual Sutra checkout URL
+        setTimeout(() => {
+          const sutraUrl = 'https://sutra.co/checkout/your-course-id-here';
+          const sutraWithEmail = `${sutraUrl}?email=${encodeURIComponent(data.email)}&name=${encodeURIComponent(data.name)}`;
+          window.location.href = sutraWithEmail;
+        }, 2000);
       } else {
         // Show error message
         errorText.textContent = result.error || 'Something went wrong. Please try again.';
