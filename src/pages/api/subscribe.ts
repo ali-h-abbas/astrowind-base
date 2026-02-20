@@ -1,6 +1,19 @@
 /**
  * API Route: Email Subscription with ConvertKit Integration
  *
+ * PRESERVED FOR ROLLBACK
+ *
+ * This ConvertKit integration is temporarily disabled (the email capture form
+ * has been replaced with a direct Sutra enrollment link) but is preserved here
+ * for easy re-enablement.
+ *
+ * To restore the email capture flow:
+ * 1. Set enrollmentConfig.mode = 'email-capture' in src/config/enrollment.ts
+ * 2. Uncomment the email capture form section in src/pages/landing/meditation-bootcamp.astro
+ * 3. Re-enable the form-handling <script> block in that same file
+ * 4. Set CONVERTKIT_API_KEY and CONVERTKIT_FORM_ID environment variables
+ * 5. See ROLLBACK.md for full step-by-step instructions
+ *
  * This endpoint handles email capture from landing pages and:
  * 1. Validates the input data
  * 2. Subscribes the user to ConvertKit
