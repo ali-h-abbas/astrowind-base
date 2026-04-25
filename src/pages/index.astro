@@ -20,6 +20,7 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
 <Layout metadata={metadata}>
   <!-- Hero Section ******************* -->
   <Hero
+    id="hero"
     tagline="Transformational Webinar Series"
     actions={[
       {
@@ -40,15 +41,28 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
       From feeding a predatory system to building the new civilization.
     </Fragment>
 
-    <Fragment slot="image">
+    <Fragment slot="bg">
       <img
         src="https://github.com/user-attachments/assets/8365d9a2-7356-495f-8aee-832db3dba2b9"
-        alt="Silhouette of a person standing on a mountain peak overlooking a vast landscape"
-        class="mx-auto w-full rounded-lg shadow-lg"
+        alt=""
+        aria-hidden="true"
+        class="absolute inset-0 w-full h-full object-cover object-center"
         loading="eager"
       />
+      <div class="absolute inset-0 bg-black/55"></div>
     </Fragment>
   </Hero>
+
+  <style>
+    /* Force white text on the hero when it has a background image */
+    #hero p,
+    #hero h1 {
+      color: #fff !important;
+    }
+    #hero h1 .text-accent {
+      color: #a5b4fc !important; /* keep accent visible on dark bg */
+    }
+  </style>
 
   <!-- The Old Game Is Dying ******************* -->
   <Content
