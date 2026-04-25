@@ -11,7 +11,6 @@ const metadata = {
   title: 'From Consumer to Creator — Transformational Webinar Series',
   description:
     'A webinar series blending somatic coaching, nervous system work, archetypal depth, and civilizational narrative. Begin the path toward belonging.',
-  ignoreTitleTemplate: true,
 };
 
 const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
@@ -20,7 +19,6 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
 <Layout metadata={metadata}>
   <!-- Hero Section ******************* -->
   <Hero
-    id="hero"
     tagline="Transformational Webinar Series"
     actions={[
       {
@@ -40,29 +38,7 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
       From self-interest to living your destiny.<br />
       From feeding a predatory system to building the new civilization.
     </Fragment>
-
-    <Fragment slot="bg">
-      <img
-        src="https://github.com/user-attachments/assets/8365d9a2-7356-495f-8aee-832db3dba2b9"
-        alt=""
-        aria-hidden="true"
-        class="absolute inset-0 w-full h-full object-cover object-center"
-        loading="eager"
-      />
-      <div class="absolute inset-0 bg-black/55"></div>
-    </Fragment>
   </Hero>
-
-  <style>
-    /* Force white text on the hero when it has a background image */
-    #hero p,
-    #hero h1 {
-      color: #fff !important;
-    }
-    #hero h1 .text-accent {
-      color: #a5b4fc !important; /* keep accent visible on dark bg */
-    }
-  </style>
 
   <!-- The Old Game Is Dying ******************* -->
   <Content
@@ -81,15 +57,6 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
       <p class="text-lg font-semibold dark:text-white">
         The great news is that it lives inside you. The even better news is that it is ancient.
       </p>
-    </Fragment>
-
-    <Fragment slot="image">
-      <img
-        src="https://github.com/user-attachments/assets/aa5bfbff-be75-4072-9498-e8101a037312"
-        alt="Chess board with pieces — the old game"
-        class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
-        loading="lazy"
-      />
     </Fragment>
 
     <Fragment slot="bg">
@@ -114,15 +81,6 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
       <p class="text-lg font-semibold dark:text-white">
         The old game — capitalism, the American Dream — is the wrong arena now. A new game is emerging.
       </p>
-    </Fragment>
-
-    <Fragment slot="image">
-      <img
-        src="https://github.com/user-attachments/assets/2604d262-83d9-4ca2-92a1-39ecc501d1b4"
-        alt="A budding flower beside a fully bloomed dahlia — right conditions for flourishing"
-        class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
-        loading="lazy"
-      />
     </Fragment>
   </Content>
 
@@ -186,7 +144,7 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
       {
         title: 'Story 1 — The Ancient Game',
         description:
-          "Our 300,000-year human story, the critical plot twist 12,000 years ago that created our hostile environment, and why this is not normal — and doesn't have to continue.",
+          'Our 300,000-year human story, the critical plot twist 12,000 years ago that created our hostile environment, and why this is not normal — and doesn\'t have to continue.',
       },
       {
         title: 'Story 2 — Your Human Operating System',
@@ -209,15 +167,6 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
         After your first week of guided meditation, you'll receive two foundational stories:
       </p>
     </Fragment>
-
-    <Fragment slot="image">
-      <img
-        src="https://github.com/user-attachments/assets/7d6fc391-a310-4033-b6b5-cb82fa0523cd"
-        alt="Four colorful hands reaching toward each other — connection and somatic presence"
-        class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
-        loading="lazy"
-      />
-    </Fragment>
   </Content>
 
   <!-- You Are Enough ******************* -->
@@ -236,15 +185,6 @@ const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
       <p class="text-lg font-semibold dark:text-white">
         Your only requirement: show up fully, on time, in a space where you can explore your inner world.
       </p>
-    </Fragment>
-
-    <Fragment slot="image">
-      <img
-        src="https://github.com/user-attachments/assets/7d5effdd-d52c-40c6-9538-2c639161705d"
-        alt="The Milky Way galaxy spanning a deep night sky — the holographic Field"
-        class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
-        loading="lazy"
-      />
     </Fragment>
 
     <Fragment slot="bg">
