@@ -1,5 +1,5 @@
 site:
-  name: AstroWind
+  name: Amor Fati
   site: 'https://ali-h-abbas.github.io'
   base: '/'
   trailingSlash: false
@@ -9,14 +9,14 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: AstroWind
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: Amor Fati
+    template: '%s — Amor Fati'
+  description: "From Consumer to Creator — a transformational webinar series blending somatic coaching, nervous system work, and civilizational narrative."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: Amor Fati
     images:
       - url: '~/assets/images/default.png'
         width: 1200
