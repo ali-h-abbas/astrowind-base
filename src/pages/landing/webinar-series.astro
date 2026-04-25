@@ -1,0 +1,209 @@
+---
+import Layout from '~/layouts/LandingLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Content from '~/components/widgets/Content.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import { enrollmentConfig } from '~/config/enrollment';
+
+const metadata = {
+  title: 'From Consumer to Creator — Transformational Webinar Series',
+  description:
+    'A webinar series blending somatic coaching, nervous system work, archetypal depth, and civilizational narrative. Begin the path toward belonging.',
+};
+
+const ENROLLMENT_URL = enrollmentConfig.sutraEnrollmentUrl;
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Section ******************* -->
+  <Hero
+    tagline="Transformational Webinar Series"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Reserve Your Seat',
+        href: ENROLLMENT_URL,
+        target: '_blank',
+        icon: 'tabler:arrow-right',
+      },
+    ]}
+  >
+    <Fragment slot="title">
+      From <span class="text-accent dark:text-white">Consumer</span> to Creator
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      From self-interest to living your destiny.<br />
+      From feeding a predatory system to building the new civilization.
+    </Fragment>
+  </Hero>
+
+  <!-- The Old Game Is Dying ******************* -->
+  <Content
+    id="old-game"
+    tagline="A World in Transition"
+    title="The Old Game Is Dying"
+  >
+    <Fragment slot="content">
+      <p class="text-lg mb-4">
+        Humanity is at a critical juncture. Unparalleled advancements offer hope of a golden age — while intensifying
+        global and personal crises create enormous unnecessary stress.
+      </p>
+      <p class="text-lg mb-4">
+        What is required is as straightforward as it is profound: a new operating system for civilization.
+      </p>
+      <p class="text-lg font-semibold dark:text-white">
+        The great news is that it lives inside you. The even better news is that it is ancient.
+      </p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- The Right Player for the Right Arena ******************* -->
+  <Content
+    isReversed
+    isAfterContent
+    tagline="Finding Your Arena"
+    title="The Right Player for the Right Arena"
+  >
+    <Fragment slot="content">
+      <p class="text-lg mb-4">
+        Imagine two arenas — the Middle East and Carnegie Hall — and two players: a Navy SEAL and a master violinist.
+        Drop the violinist into a warzone, and their survival is unlikely. Drop the SEAL on stage, and they'll struggle
+        too.
+      </p>
+      <p class="text-lg mb-4">Success depends on your skills being matched to the arena.</p>
+      <p class="text-lg font-semibold dark:text-white">
+        The old game — capitalism, the American Dream — is the wrong arena now. A new game is emerging.
+      </p>
+    </Fragment>
+  </Content>
+
+  <!-- What You'll Walk Away With ******************* -->
+  <Features3
+    id="takeaways"
+    title="What You'll Walk Away With"
+    subtitle="Practical tools and deep insights for navigating the transition from the old world to the new."
+    columns={2}
+    items={[
+      {
+        title: 'Inner-Directed Clarity',
+        description: 'Clarity on your inner-directed goals — free from the need to impress or perform.',
+        icon: 'tabler:compass',
+      },
+      {
+        title: 'Nervous System Tools',
+        description:
+          'Breath and nervous system practices to resolve stress and cultivate courage, creativity, and compassion.',
+        icon: 'tabler:lungs',
+      },
+      {
+        title: 'Deeper Alignment',
+        description: 'Greater alignment with your values — creating genuine intimacy with yourself and others.',
+        icon: 'tabler:heart-handshake',
+      },
+      {
+        title: 'A Growth Mindset',
+        description: 'The ability to metabolize setbacks, grief, and anger into fuel for joy and resilience.',
+        icon: 'tabler:plant-2',
+      },
+      {
+        title: 'Trust in Yourself & Life',
+        description: 'Greater trust in yourself and in life itself.',
+        icon: 'tabler:shield-heart',
+      },
+      {
+        title: 'Work With Fate',
+        description: 'The ability to work with fate — not against it — to live your destiny.',
+        icon: 'tabler:infinity',
+      },
+      {
+        title: 'A New Story',
+        description:
+          'Discover how the global crisis is actually calling you to the life you were born to create.',
+        icon: 'tabler:book-2',
+      },
+    ]}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Features3>
+
+  <!-- A Different Kind of Webinar ******************* -->
+  <Content
+    id="format"
+    tagline="The Format"
+    title="A Different Kind of Webinar"
+    items={[
+      {
+        title: 'Story 1 — The Ancient Game',
+        description:
+          'Our 300,000-year human story, the critical plot twist 12,000 years ago that created our hostile environment, and why this is not normal — and doesn\'t have to continue.',
+      },
+      {
+        title: 'Story 2 — Your Human Operating System',
+        description:
+          'The physics and mechanics of how you work — empowering you to be the change required at this moment.',
+      },
+    ]}
+  >
+    <Fragment slot="content">
+      <p class="text-lg mb-4">
+        These sessions won't flood you with content. We slow down. We begin with meditation, grounding you in somatic
+        awareness. We create a relational container — not a lecture.
+      </p>
+      <p class="text-lg mb-4">
+        You'll be invited to listen to yourself and others without judgment, staying present in your breath and body.
+        We'll explore belonging vs. fitting in, the neuroscience of threat and safety, and give you practices to face
+        triggering situations with strength.
+      </p>
+      <p class="text-lg mb-4">
+        After your first week of guided meditation, you'll receive two foundational stories:
+      </p>
+    </Fragment>
+  </Content>
+
+  <!-- You Are Enough ******************* -->
+  <Content
+    isReversed
+    isAfterContent
+    tagline="Your Foundation"
+    title="You Are Enough. There Is More Than Enough."
+  >
+    <Fragment slot="content">
+      <p class="text-lg mb-4">
+        We live in a holographic universe — a Field that is receptive and responsive to your inner state. You are a
+        supported part of a Field permeated with the inexorable force of love.
+      </p>
+      <p class="text-lg mb-4">This could be a great time.</p>
+      <p class="text-lg font-semibold dark:text-white">
+        Your only requirement: show up fully, on time, in a space where you can explore your inner world.
+      </p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Final CTA ******************* -->
+  <CallToAction
+    title="Join the Webinar Series"
+    subtitle="Begin the path toward belonging."
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Reserve Your Seat',
+        href: ENROLLMENT_URL,
+        target: '_blank',
+        icon: 'tabler:arrow-right',
+      },
+    ]}
+  />
+</Layout>
